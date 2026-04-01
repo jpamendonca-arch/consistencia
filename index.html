@@ -187,7 +187,7 @@ function TreinoDia({data,setData}){
   const key=todayKey();
   const treinoDone=data[`treino_${key}`];
   const diasConcluidos=Object.keys(data).filter(k=>k.startsWith('treino_')).length;
-  const digits=4+Math.floor(diasConcluidos/5);
+  const digits=5+Math.floor(diasConcluidos/5);
   const [bloco,setBloco]=useState(0);
   const [fase,setFase]=useState('show');
   const [seq,setSeq]=useState(()=>gerarSequencia(digits));
@@ -385,7 +385,7 @@ function Home({data,setData,setTab}){
   const checkDone=!!data[key];
   const treinoDone=!!data[`treino_${key}`];
   const diasConcluidos=Object.keys(data).filter(k=>k.startsWith('treino_')).length;
-  const digits=4+Math.floor(diasConcluidos/5);
+  const digits=5+Math.floor(diasConcluidos/5);
   const totalChecks=Object.values(data).filter(e=>e&&e.date&&e.date.length===10).length;
 
   return(
