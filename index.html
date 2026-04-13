@@ -347,7 +347,7 @@ function StopSignal({data,setData,onBack,nivel}) {
     nxR.current=setTimeout(()=>{
       if(cntR.current>=TOTAL){setAc(acR.current);setEr(erR.current);const k='inic_stopsignal_'+today();const nd={...data,[k]:{date:today(),tipo:'stopsignal',acertos:acR.current,erros:erR.current,nivel}};setData(nd);save(nd);setFase('result');return}
       stopR.current=false;setShowStop(false);setAguarda(true);
-      if(Math.random()<SF){stR.current=setTimeout(()=>{setShowStop(true);stopR.current=true},SD)}
+      if(Math.random()<SF){stR.current=setTimeout(()=>{setShowStop(true);stopR.current=true;setAguarda(false);setTimeout(()=>{acR.current++;cntR.current++;setAc(acR.current);setShowStop(false);proximo();},900)},SD)}
     },700);
   };
   const start=()=>{acR.current=0;erR.current=0;cntR.current=0;setFase('run');proximo()};
