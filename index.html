@@ -157,11 +157,14 @@ const weekDays = () => {
 const avg = arr => arr.length ? (arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(1) : null;
 const defEntry = () => ({semSubstancia:false,sono:7,energia:7,fissura:3,execCorpo:false,execMente:false,execEsp:false,execRotina:false,socialLeve:null,excessoIntensidade:null,observacao:''});
 const dlCSV = (fn,rows) => {
-  const csv=rows.map(r=>r.map(c=>'"'+String(c==null?'':c).replace(/"/g,'""')+'"').join(',')).join('
-');
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
-  a.download=fn; a.click();
+  const q = x => {
+    const s = String(x == null ? '' : x);
+    return s.replace(/,/g,' ').replace(/\n/g,' ');
+  };
+  const csv = rows.map(r => r.map(q).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+  a.download = fn; a.click();
 };
 const getBase = (data,tipo) => {
   const recs=Object.entries(data).filter(([k])=>k.startsWith('inic_'+tipo+'_')).map(([,v])=>v).sort((a,b)=>a.date.localeCompare(b.date)).slice(-5);
@@ -682,8 +685,8 @@ function Cal({data}) {
         })}
       </div>
       <div style={{display:'flex',gap:16,marginTop:16,fontSize:11,color:'var(--mu)',fontFamily:'JetBrains Mono'}}>
-        <span><span style={{color:'var(--gr)'}}>■</span> check</span>
-        <span><span style={{color:'var(--ac)'}}>■</span> regulacao</span>
+        <span><span style={{color:'var(--gr)'}}>*</span> check</span>
+        <span><span style={{color:'var(--ac)'}}>*</span> regulacao</span>
       </div>
     </div>
   );
@@ -718,11 +721,11 @@ function Semana({data,aiAn,setAiAn}) {
   return (
     <div>
       <div className="st">SEMANA ATUAL</div>
-      <div className={'badge '+st}><span>●</span><span>{sl[st]}</span><span style={{marginLeft:4,opacity:.6}}>{we.length}/7 - treino {wt}/7</span></div>
+      <div className={'badge '+st}><span>o</span><span>{sl[st]}</span><span style={{marginLeft:4,opacity:.6}}>{we.length}/7 - treino {wt}/7</span></div>
       <div className="sg">
-        <div className="sc"><div className="sl2">SONO MEDIO</div><div className={'sv2 '+(as>=7?'good':as>=5?'warn':'bad')}>{as||'—'}</div></div>
-        <div className="sc"><div className="sl2">ENERGIA MEDIA</div><div className={'sv2 '+(ae>=7?'good':ae>=5?'warn':'bad')}>{ae||'—'}</div></div>
-        <div className="sc"><div className="sl2">FISSURA MEDIA</div><div className={'sv2 '+(af<=3?'good':af<=6?'warn':'bad')}>{af||'—'}</div></div>
+        <div className="sc"><div className="sl2">SONO MEDIO</div><div className={'sv2 '+(as>=7?'good':as>=5?'warn':'bad')}>{as||'-'}</div></div>
+        <div className="sc"><div className="sl2">ENERGIA MEDIA</div><div className={'sv2 '+(ae>=7?'good':ae>=5?'warn':'bad')}>{ae||'-'}</div></div>
+        <div className="sc"><div className="sl2">FISSURA MEDIA</div><div className={'sv2 '+(af<=3?'good':af<=6?'warn':'bad')}>{af||'-'}</div></div>
         <div className="sc"><div className="sl2">EXECUCAO</div><div className={'sv2 '+(ep>=70?'good':ep>=40?'warn':'bad')}>{ep}%</div></div>
       </div>
       <div className="st" style={{marginTop:16}}>ANALISE IA</div>
@@ -755,8 +758,8 @@ function Mensal({data,setData}) {
       <div style={{background:'var(--sf)',border:'1px solid var(--bd)',borderRadius:8,padding:'4px 16px',marginBottom:20}}>
         <div className="ms"><span className="ml">Checks feitos</span><span className="mv">{me.length}/{dim}</span></div>
         <div className="ms"><span className="ml">Regulacao feita</span><span className="mv">{tr}/{dim}</span></div>
-        <div className="ms"><span className="ml">Energia media</span><span className="mv">{ae||'—'}</span></div>
-        <div className="ms"><span className="ml">Fissura</span><span className="mv" style={{color:ef?.includes('subindo')?'var(--re)':'var(--gr)'}}>{ef||'—'}</span></div>
+        <div className="ms"><span className="ml">Energia media</span><span className="mv">{ae||'-'}</span></div>
+        <div className="ms"><span className="ml">Fissura</span><span className="mv" style={{color:ef?.includes('subindo')?'var(--re)':'var(--gr)'}}>{ef||'-'}</span></div>
       </div>
       <div className="st">REFLEXAO DO MES</div>
       <textarea className="oi" rows={6} placeholder="Como foi este mes? O que funcionou?" value={res} onChange={e=>setRes(e.target.value)}/>
