@@ -347,7 +347,7 @@ function StopSignal({data,setData,onBack,nivel}) {
     nxR.current=setTimeout(()=>{
       if(cntR.current>=TOTAL){setAc(acR.current);setEr(erR.current);const k='inic_stopsignal_'+today();const nd={...data,[k]:{date:today(),tipo:'stopsignal',acertos:acR.current,erros:erR.current,nivel}};setData(nd);save(nd);setFase('result');return}
       stopR.current=false;setShowStop(false);setAguarda(true);
-      if(Math.random()<SF){stR.current=setTimeout(()=>{setShowStop(true);stopR.current=true;setAguarda(false);setTimeout(()=>{acR.current++;cntR.current++;setAc(acR.current);setShowStop(false);proximo();},900)},SD)}
+      if(Math.random()<SF){stR.current=setTimeout(()=>{setShowStop(true);stopR.current=true;setAguarda(false);stR.current=setTimeout(()=>{if(stopR.current){acR.current++;cntR.current++;setAc(acR.current);}setShowStop(false);stopR.current=false;proximo();},900)},SD)}
     },700);
   };
   const start=()=>{acR.current=0;erR.current=0;cntR.current=0;setFase('run');proximo()};
@@ -389,7 +389,7 @@ function StopSignal({data,setData,onBack,nivel}) {
       <div style={{display:'flex',justifyContent:'space-between',fontFamily:'JetBrains Mono',fontSize:11,color:'var(--mu)',marginBottom:8}}>
         <span>{cntR.current}/{TOTAL}</span><span>erros: {erR.current}</span>
       </div>
-      {showStop?<div className="stop">STOP</div>:aguarda?<button className="ssb" onClick={click}>TOQUE</button>:<div style={{width:140,height:140,margin:'24px auto',display:'flex',alignItems:'center',justifyContent:'center'}}><span style={{fontFamily:'JetBrains Mono',fontSize:11,color:'var(--mu)'}}>aguarde...</span></div>}
+      {showStop?<div className="stop" style={{cursor:"pointer"}} onClick={()=>{if(stopR.current){erR.current++;cntR.current++;setEr(erR.current);stopR.current=false;clearTimeout(stR.current);setShowStop(false);proximo();}}}>STOP</div>:aguarda?<button className="ssb" onClick={click}>TOQUE</button>:<div style={{width:140,height:140,margin:'24px auto',display:'flex',alignItems:'center',justifyContent:'center'}}><span style={{fontFamily:'JetBrains Mono',fontSize:11,color:'var(--mu)'}}>aguarde...</span></div>}
       <div style={{textAlign:'center',fontSize:12,color:'var(--mu)',fontFamily:'JetBrains Mono'}}>{showStop?'nao toque!':'toque quando aparecer'}</div>
     </div>
   );
