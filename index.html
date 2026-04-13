@@ -1,5 +1,790 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><title>Teste</title></head>
-<body style="background:#0c0c0e;color:#e8e8ec;font-family:sans-serif;padding:40px">
-<h1>Funcionou!</h1><p>GitHub Pages ok.</p>
-</body></html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consistencia</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0c0c0e;--sf:#141416;--sf2:#1c1c20;--bd:#2a2a30;--tx:#e8e8ec;--mu:#6b6b78;--gr:#22c55e;--ye:#eab308;--re:#ef4444;--ac:#7c6af7;}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;font-size:14px;}
+#root{max-width:480px;margin:0 auto;min-height:100vh;}
+.app{display:flex;flex-direction:column;min-height:100vh;}
+.nav{display:flex;border-bottom:1px solid var(--bd);background:var(--bg);position:sticky;top:0;z-index:10;}
+.nb{flex:1;padding:13px 2px;font-size:10px;font-family:'JetBrains Mono',monospace;background:none;border:none;color:var(--mu);cursor:pointer;letter-spacing:0.04em;border-bottom:2px solid transparent;transition:all 0.2s;}
+.nb.on{color:var(--ac);border-bottom-color:var(--ac);}
+.main{flex:1;padding:20px 16px 100px;}
+.rb{background:var(--sf);border:1px solid var(--bd);border-left:3px solid var(--ac);border-radius:8px;padding:14px 16px;margin-bottom:24px;}
+.rt{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;color:var(--ac);margin-bottom:10px;}
+.rl{list-style:none;}
+.rl li{font-size:12px;color:var(--mu);padding:3px 0;display:flex;gap:8px;}
+.rl li span:first-child{color:var(--ac);font-family:'JetBrains Mono',monospace;}
+.st{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;color:var(--mu);margin-bottom:14px;text-transform:uppercase;}
+.fi{margin-bottom:16px;}
+.fl{display:block;font-size:13px;color:var(--tx);margin-bottom:8px;}
+.fl span{color:var(--mu);font-size:11px;margin-left:4px;}
+.cr{display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 12px;background:var(--sf);border:1px solid var(--bd);border-radius:6px;transition:border-color 0.15s;}
+.cr:hover{border-color:var(--ac);}
+.cr.ck{border-color:var(--gr);background:#22c55e0d;}
+.cb{width:18px;height:18px;border:2px solid var(--bd);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;}
+.cr.ck .cb{border-color:var(--gr);background:var(--gr);}
+.cm{color:#000;font-size:11px;font-weight:700;}
+.sw{display:flex;align-items:center;gap:10px;}
+.sl{flex:1;-webkit-appearance:none;appearance:none;height:4px;background:var(--sf2);border-radius:2px;outline:none;}
+.sl::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--ac);cursor:pointer;border:2px solid var(--bg);}
+.sv{font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--tx);min-width:24px;text-align:right;}
+.yr{display:flex;gap:8px;}
+.yb{flex:1;padding:10px;border:1px solid var(--bd);background:var(--sf);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--mu);cursor:pointer;transition:all 0.15s;}
+.yb.sy{border-color:var(--gr);color:var(--gr);background:#22c55e0d;}
+.yb.sn{border-color:var(--re);color:var(--re);background:#ef44440d;}
+.oi{width:100%;background:var(--sf);border:1px solid var(--bd);border-radius:6px;color:var(--tx);font-family:'Sora',sans-serif;font-size:13px;padding:10px 12px;resize:none;outline:none;transition:border-color 0.15s;line-height:1.5;}
+.oi:focus{border-color:var(--ac);}
+.oi::placeholder{color:var(--mu);}
+.pb{width:100%;padding:14px;background:var(--ac);border:none;border-radius:8px;color:#fff;font-family:'Sora',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:opacity 0.2s;margin-top:8px;}
+.pb:hover{opacity:.85;}
+.pb:disabled{opacity:.4;cursor:default;}
+.sb{width:100%;padding:12px;background:var(--sf2);border:1px solid var(--bd);border-radius:8px;color:var(--tx);font-family:'Sora',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;margin-top:8px;}
+.sb:hover{border-color:var(--ac);color:var(--ac);}
+.sb:disabled{opacity:.4;cursor:default;}
+.ok{background:#22c55e15;border:1px solid var(--gr);border-radius:8px;padding:12px 16px;color:var(--gr);font-family:'JetBrains Mono',monospace;font-size:12px;text-align:center;margin-top:12px;}
+.dh{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);margin-bottom:20px;letter-spacing:.1em;}
+.ec{display:flex;flex-wrap:wrap;gap:8px;}
+.ep{padding:8px 12px;border:1px solid var(--bd);border-radius:20px;font-size:12px;color:var(--mu);cursor:pointer;transition:all 0.15s;background:var(--sf);}
+.ep.ck{border-color:var(--gr);color:var(--gr);background:#22c55e0d;}
+.ad{background:var(--sf);border:1px solid var(--gr);border-radius:8px;padding:20px;text-align:center;margin-bottom:20px;}
+.at{color:var(--gr);font-family:'JetBrains Mono',monospace;font-size:12px;margin-bottom:8px;}
+.as{color:var(--mu);font-size:13px;}
+.el{color:var(--ac);background:none;border:none;cursor:pointer;font-size:12px;font-family:'JetBrains Mono',monospace;margin-top:8px;display:block;}
+.ch{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.cn{background:none;border:none;color:var(--mu);cursor:pointer;font-size:18px;padding:4px 10px;}
+.cm2{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--tx);}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cdn{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--mu);text-align:center;padding:4px 0;}
+.cd{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);background:var(--sf);border:1px solid var(--bd);}
+.cd.fi2{background:var(--gr);color:#000;border-color:var(--gr);font-weight:700;}
+.cd.tr{background:#7c6af722;border-color:var(--ac);}
+.cd.to{border-color:var(--ac);color:var(--ac);}
+.cd.to.fi2{border-color:var(--gr);color:#000;}
+.cd.es{background:none;border-color:transparent;}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.sc{background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:12px;}
+.sl2{font-size:10px;color:var(--mu);font-family:'JetBrains Mono',monospace;margin-bottom:4px;}
+.sv2{font-size:24px;font-family:'JetBrains Mono',monospace;color:var(--tx);}
+.sv2.good{color:var(--gr);}
+.sv2.warn{color:var(--ye);}
+.sv2.bad{color:var(--re);}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;font-family:'JetBrains Mono',monospace;font-size:11px;margin-bottom:20px;border:1px solid;}
+.badge.green{color:var(--gr);border-color:var(--gr);background:#22c55e0d;}
+.badge.yellow{color:var(--ye);border-color:var(--ye);background:#eab3080d;}
+.badge.red{color:var(--re);border-color:var(--re);background:#ef44440d;}
+.aib{background:var(--sf);border:1px solid var(--bd);border-left:3px solid var(--ac);border-radius:8px;padding:16px;margin-bottom:16px;}
+.ail{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ac);margin-bottom:10px;letter-spacing:.1em;}
+.ait{font-size:13px;color:var(--tx);line-height:1.7;white-space:pre-wrap;}
+.ms{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--bd);}
+.ms:last-of-type{border-bottom:none;}
+.ml{font-size:13px;color:var(--mu);}
+.mv{font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--tx);}
+.tc{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:20px;margin-bottom:16px;}
+.tt{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ac);letter-spacing:.15em;margin-bottom:6px;}
+.ts{font-size:12px;color:var(--mu);margin-bottom:16px;}
+.tseq{font-family:'JetBrains Mono',monospace;font-size:32px;color:var(--tx);text-align:center;padding:20px 0;letter-spacing:8px;}
+.ti{width:100%;background:var(--sf2);border:1px solid var(--bd);border-radius:6px;color:var(--tx);font-family:'JetBrains Mono',monospace;font-size:22px;padding:12px;text-align:center;outline:none;letter-spacing:6px;margin-bottom:12px;}
+.ti:focus{border-color:var(--ac);}
+.ti::placeholder{color:var(--bd);font-size:14px;letter-spacing:normal;}
+.tinst{font-size:15px;color:var(--tx);text-align:center;line-height:1.6;padding:16px 0;}
+.ttim{font-family:'JetBrains Mono',monospace;font-size:48px;color:var(--ac);text-align:center;padding:20px 0;}
+.tbar{width:100%;height:4px;background:var(--sf2);border-radius:2px;margin:12px 0;}
+.tbf{height:100%;background:var(--ac);border-radius:2px;transition:width 1s linear;}
+.tdone{text-align:center;padding:30px 0;}
+.tdtitle{font-family:'JetBrains Mono',monospace;font-size:18px;color:var(--gr);margin-bottom:8px;}
+.bn{display:flex;gap:8px;margin-bottom:20px;}
+.bd2{width:8px;height:8px;border-radius:50%;background:var(--bd);transition:all 0.2s;}
+.bd2.on{background:var(--ac);}
+.bd2.dn{background:var(--gr);}
+.fok{color:var(--gr);font-family:'JetBrains Mono',monospace;font-size:12px;text-align:center;margin-bottom:8px;}
+.fer{color:var(--re);font-family:'JetBrains Mono',monospace;font-size:12px;text-align:center;margin-bottom:8px;}
+.pr{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);margin-bottom:4px;}
+.xb{background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:16px;margin-top:24px;}
+.xt{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);letter-spacing:.15em;margin-bottom:12px;}
+.xr{display:flex;gap:8px;}
+.xe{flex:1;padding:11px 8px;background:var(--sf2);border:1px solid var(--bd);border-radius:6px;color:var(--tx);font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.xe:hover{border-color:var(--ac);color:var(--ac);}
+.xe span{font-size:9px;color:var(--mu);}
+.xi{font-size:11px;color:var(--mu);margin-top:10px;line-height:1.5;}
+.im{display:flex;flex-direction:column;gap:12px;margin-top:8px;}
+.ic{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:18px 20px;cursor:pointer;transition:border-color 0.15s;}
+.ic:hover{border-color:var(--ac);}
+.ict{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--tx);margin-bottom:4px;}
+.bk{background:none;border:none;color:var(--mu);font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;margin-bottom:20px;display:flex;align-items:center;gap:6px;padding:0;}
+.bk:hover{color:var(--ac);}
+.stim{width:140px;height:140px;border-radius:16px;margin:24px auto;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;}
+.stl{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);text-align:center;margin-bottom:8px;letter-spacing:.1em;}
+.sw2{font-family:'JetBrains Mono',monospace;font-size:44px;font-weight:700;text-align:center;padding:30px 0;}
+.so{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;}
+.sopt{padding:14px;border-radius:8px;border:2px solid var(--bd);background:var(--sf);cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;text-align:center;}
+.ssb{width:140px;height:140px;border-radius:50%;background:var(--ac);border:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;cursor:pointer;display:block;margin:24px auto;user-select:none;}
+.ssb:active{transform:scale(.95);}
+.stop{width:140px;height:140px;border-radius:50%;background:var(--re);color:#fff;font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:24px auto;}
+.res{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:20px;margin-bottom:16px;}
+.rr{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bd);font-family:'JetBrains Mono',monospace;font-size:13px;}
+.rr:last-of-type{border-bottom:none;}
+.rf{font-size:13px;color:var(--tx);line-height:1.7;padding:14px 0;}
+.tmenu{display:flex;flex-direction:column;gap:12px;}
+.tmb{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:18px 20px;cursor:pointer;transition:border-color 0.15s;text-align:left;width:100%;}
+.tmb:hover{border-color:var(--ac);}
+.tmt{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--tx);margin-bottom:4px;}
+.tms{font-size:11px;color:var(--mu);}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useRef} = React;
+const SK = 'consistencia_v2';
+const load = () => { try { return JSON.parse(localStorage.getItem(SK)||'{}') } catch(e) { return {} } };
+const save = d => localStorage.setItem(SK, JSON.stringify(d));
+const today = () => new Date().toISOString().slice(0,10);
+const fmtDate = d => new Date(d+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
+const weekDays = () => {
+  const t=new Date(), day=t.getDay();
+  const mon=new Date(t); mon.setDate(t.getDate()-(day===0?6:day-1));
+  return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d.toISOString().slice(0,10)});
+};
+const avg = arr => arr.length ? (arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(1) : null;
+const defEntry = () => ({semSubstancia:false,sono:7,energia:7,fissura:3,execCorpo:false,execMente:false,execEsp:false,execRotina:false,socialLeve:null,excessoIntensidade:null,observacao:''});
+const dlCSV = (fn,rows) => {
+  const csv=rows.map(r=>r.map(c=>'"'+String(c==null?'':c).replace(/"/g,'""')+'"').join(',')).join('
+');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8;'}));
+  a.download=fn; a.click();
+};
+const getBase = (data,tipo) => {
+  const recs=Object.entries(data).filter(([k])=>k.startsWith('inic_'+tipo+'_')).map(([,v])=>v).sort((a,b)=>a.date.localeCompare(b.date)).slice(-5);
+  return recs.length ? (recs.reduce((s,r)=>s+r.erros,0)/recs.length).toFixed(1) : null;
+};
+const fbTxt = (erros,base) => {
+  if(base===null) return 'Primeiro registro. Continue para construir sua linha de base.';
+  if(erros<Number(base)) return 'Hoje voce teve menos erros que sua media recente.';
+  if(erros>Number(base)) return 'Hoje voce teve mais erros que seu padrao recente.';
+  return 'Desempenho igual a sua media recente.';
+};
+const getNivel = (data,tipo) => {
+  const recs=Object.entries(data).filter(([k])=>k.startsWith('inic_'+tipo+'_')).map(([,v])=>v).sort((a,b)=>a.date.localeCompare(b.date));
+  if(recs.length<4) return 1;
+  const base=Number(getBase(data,tipo));
+  const last3=recs.slice(-3);
+  if(last3.every(r=>r.erros<base)) return Math.min((recs[recs.length-1].nivel||1)+1,3);
+  if(last3.every(r=>r.erros>base)) return Math.max((recs[recs.length-1].nivel||1)-1,1);
+  return recs[recs.length-1].nivel||1;
+};
+const genSeq = n => Array.from({length:n},()=>Math.floor(Math.random()*10)).join('');
+const ctrlInst = d => {
+  if(d<10) return {i:'Conte de 1 a 50.\nMultiplos de 3: diga X em vez do numero.',e:'1,2,X,4,5,X,7...'};
+  if(d<20) return {i:'Conte de 1 a 50.\nMultiplos de 3: X | Multiplos de 5: Z',e:'1,2,X,4,Z,X,7...'};
+  if(d<30) return {i:'Conte de 50 a 1 (regressivo).\nMultiplos de 3: X | Multiplos de 7: Z',e:'50,49,X,47...'};
+  return {i:'Some 3 na ida, subtraia 7 na volta.\nInicio em 1, va ate 40 e volte.',e:'1,4,7... depois 40,33,26...'};
+};
+const GNG_CORES=[{c:'#22c55e',go:true},{c:'#7c6af7',go:true},{c:'#ef4444',go:false},{c:'#eab308',go:false}];
+const STROOP=[{n:'VERMELHO',c:'#ef4444'},{n:'VERDE',c:'#22c55e'},{n:'AZUL',c:'#3b82f6'},{n:'AMARELO',c:'#eab308'}];
+const genStroop = nv => {
+  const tx=STROOP[Math.floor(Math.random()*STROOP.length)];
+  const outros=STROOP.filter(s=>s.n!==tx.n);
+  const ti=(nv===1&&Math.random()<0.5)?tx:outros[Math.floor(Math.random()*outros.length)];
+  return {texto:tx.n, cor:ti.c, certa:ti.n};
+};
+
+function Rules() {
+  return (
+    <div className="rb">
+      <div className="rt">TODAY RULES</div>
+      <ul className="rl">
+        {['Faca mesmo sem vontade','Nao complique','Nao acelere','Nao relaxe','Quebrou? volta amanha'].map((r,i)=>(
+          <li key={i}><span>{i+1}.</span><span>{r}</span></li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function GoNoGo({data,setData,onBack,nivel}) {
+  const TOTAL=nivel===1?60:nivel===2?80:100;
+  const MS=nivel===1?1800:nivel===2?1400:1000;
+  const NF=nivel===1?0.25:nivel===2?0.35:0.45;
+  const [fase,setFase]=useState('intro');
+  const [stim,setStim]=useState(null);
+  const [ac,setAc]=useState(0);
+  const [er,setEr]=useState(0);
+  const acR=useRef(0), erR=useRef(0), cntR=useRef(0), tmR=useRef(null), curR=useRef(null);
+  const genS=()=>{const go=Math.random()>NF;const pool=GNG_CORES.filter(c=>c.go===go);return pool[Math.floor(Math.random()*pool.length)]};
+  const avancar=(s,clicou)=>{
+    clearTimeout(tmR.current);
+    if(clicou){if(s.go)acR.current++;else erR.current++}else{if(!s.go)acR.current++;else erR.current++}
+    cntR.current++;
+    if(cntR.current>=TOTAL){setAc(acR.current);setEr(erR.current);const k='inic_gonogo_'+today();const nd={...data,[k]:{date:today(),tipo:'gonogo',acertos:acR.current,erros:erR.current,nivel}};setData(nd);save(nd);setFase('result');return}
+    const ns=genS();curR.current=ns;setStim(ns);tmR.current=setTimeout(()=>avancar(ns,false),MS);
+  };
+  const start=()=>{acR.current=0;erR.current=0;cntR.current=0;const s=genS();curR.current=s;setStim(s);setFase('run');tmR.current=setTimeout(()=>avancar(s,false),MS)};
+  const click=()=>{if(fase!=='run')return;const s=curR.current;clearTimeout(tmR.current);avancar(s,true)};
+  useEffect(()=>()=>clearTimeout(tmR.current),[]);
+  const base=getBase(data,'gonogo');
+  if(fase==='intro') return (
+    <div>
+      <button className="bk" onClick={onBack}>voltar</button>
+      <div className="tc">
+        <div className="tt">GO / NO-GO - nivel {nivel}</div>
+        <div className="ts">Controle inibitorio visual</div>
+        <div className="tinst">
+          <span style={{color:'#22c55e',fontWeight:600}}>VERDE / ROXO</span>: toque<br/>
+          <span style={{color:'#ef4444',fontWeight:600}}>VERMELHO / AMARELO</span>: nao toque
+        </div>
+        {base&&<div style={{fontFamily:'JetBrains Mono',fontSize:11,color:'var(--mu)',textAlign:'center',marginTop:8}}>media erros recente: {base}</div>}
+        <button className="pb" style={{marginTop:20}} onClick={start}>Iniciar</button>
+      </div>
+    </div>
+  );
+  if(fase==='result') return (
+    <div>
+      <button className="bk" onClick={onBack}>voltar</button>
+      <div className="st">RESULTADO - GO/NO-GO</div>
+      <div className="res">
+        <div className="rr"><span>Acertos</span><span style={{color:'var(--gr)'}}>{ac}</span></div>
+        <div className="rr"><span>Erros</span><span style={{color:er>0?'var(--re)':'var(--tx)'}}>{er}</span></div>
+        {base&&<div className="rr"><span>Media recente</span><span>{base}</span></div>}
+        <div className="rf">{fbTxt(er,base)}</div>
+      </div>
+      <div style={{textAlign:'center',fontFamily:'JetBrains Mono',fontSize:14,color:'var(--gr)',padding:'16px 0'}}>Feito = sucesso.</div>
+    </div>
+  );
+  return (
+    <div>
+      <div style={{display:'flex',justifyContent:'space-between',fontFamily:'JetBrains Mono',fontSize:11,color:'var(--mu)',marginBottom:8}}>
+        <span>{cntR.current}/{TOTAL}</span><span>erros: {erR.current}</span>
+      </div>
+      <div className="stl">{stim?.go?'GO - TOQUE':'NO-GO - NAO TOQUE'}</div>
+      <div className="stim" style={{background:stim?.c||'var(--sf)',border:'3px solid '+(stim?.c||'var(--bd)')}} onClick={click}/>
+      <div style={{textAlign:'center',fontSize:12,color:'var(--mu)',fontFamily:'JetBrains Mono'}}>toque se for GO</div>
+    </div>
+  );
+}
+
+function Stroop({data,setData,onBack,nivel}) {
+  const [fase,setFase]=useState('intro');
+  const [stim,setStim]=useState(null);
+  const [idx,setIdx]=useState(0);
+  const [ac,setAc]=useState(0);
+  const [er,setEr]=useState(0);
+  const acR=useRef(0),erR=useRef(0),idxR=useRef(0);
+  const TOTAL=20;
+  const start=()=>{acR.current=0;erR.current=0;idxR.current=0;setStim(genStroop(nivel));setFase('run')};
+  const resp=n=>{
+    if(n===stim.certa)acR.current++;else erR.current++;
+    idxR.current++;
+    if(idxR.current>=TOTAL){
+      setAc(acR.current);setEr(erR.current);
+      const k='inic_stroop_'+today();
+      const nd={...data,[k]:{date:today(),tipo:'stroop',acertos:acR.current,erros:erR.current,nivel}};
+      setData(nd);save(nd);setFase('result');
+    } else {setStim(genStroop(nivel));setIdx(idxR.current)}
+  };
+  const base=getBase(data,'stroop');
+  if(fase==='intro') return (
+    <div>
+      <button className="bk" onClick={onBack}>voltar</button>
+      <div className="tc">
+        <div className="tt">STROOP - nivel {nivel}</div>
+        <div className="ts">Controle de interferencia</div>
+        <div className="tinst">Responda a <strong>COR DA TINTA</strong>, nao o texto.<br/><br/>Exemplo: <span style={{color:'#3b82f6',fontWeight:700}}>VERDE</span> escrito em azul: resposta = AZUL</div>
+        {base&&<div style={{fontFamily:'JetBrains Mono',fontSize:11,color:'var(--mu)',textAlign:'center',marginTop:8}}>media erros recente: {base}</div>}
+        <button className="pb" style={{marginTop:20}} onClick={start}>Iniciar</button>
+      </div>
+    </div>
+  );
+  if(fase==='result') return (
+    <div>
+      <button className="bk" onClick={onBack}>voltar</button>
+      <div className="st">RESULTADO - STROOP</div>
+      <div className="res">
+        <div className="rr"><span>Acertos</span><span style={{color:'var(--gr)'}}>{ac}</span></div>
+        <div className="rr"><span>Erros</span><span style={{color:er>0?'var(--re)':'var(--tx)'}}>{er}</span></div>
+        {base&&<div className="rr"><span>Media recente</span><span>{base}</span></div>}
+        <div className="rf">{fbTxt(er,base)}</div>
+      </div>
+      <div style={{textAlign:'center',fontFamily:'JetBrains Mono',fontSize:14,color:'var(--gr)',padding:'16px 0'}}>Feito = sucesso.</div>
+    </div>
+  );
+  return (
+    <div>
+      <div style={{display:'flex',justifyContent:'space-between',fontFamily:'JetBrains Mono',fontSize:11,color:'var(--mu)',marginBottom:8}}>
+        <span>{idx+1}/{TOTAL}</span><span>erros: {erR.current}</span>
+      </div>
+      <div style={{textAlign:'center',fontSize:11,color:'var(--mu)',fontFamily:'JetBrains Mono',marginBottom:4}}>Qual a COR DA TINTA?</div>
+      <div className="sw2" style={{color:stim?.cor}}>{stim?.texto}</div>
+      <div className="so">{STROOP.map(s=>(<button key={s.n} className="sopt" style={{color:s.c}} onClick={()=>resp(s.n)}>{s.n}</button>))}</div>
+    </div>
+  );
+}
+
+function StopSignal({data,setData,onBack,nivel}) {
+  const TOTAL=40;
+  const SF=nivel===1?0.2:nivel===2?0.3:0.4;
+  const SD=nivel===1?700:nivel===2?500:350;
+  const [fase,setFase]=useState('intro');
+  const [ac,setAc]=useState(0);
+  const [er,setEr]=useState(0);
+  const [showStop,setShowStop]=useState(false);
+  const [aguarda,setAguarda]=useState(false);
+  const acR=useRef(0),erR=useRef(0),cntR=useRef(0),stopR=useRef(false),stR=useRef(null),nxR=useRef(null);
+  const proximo=()=>{
+    clearTimeout(nxR.current);
+    nxR.current=setTimeout(()=>{
+      if(cntR.current>=TOTAL){setAc(acR.current);setEr(erR.current);const k='inic_stopsignal_'+today();const nd={...data,[k]:{date:today(),tipo:'stopsignal',acertos:acR.current,erros:erR.current,nivel}};setData(nd);save(nd);setFase('result');return}
+      stopR.current=false;setShowStop(false);setAguarda(true);
+      if(Math.random()<SF){stR.current=setTimeout(()=>{setShowStop(true);stopR.current=true},SD)}
+    },700);
+  };
+  const start=()=>{acR.current=0;erR.current=0;cntR.current=0;setFase('run');proximo()};
+  const click=()=>{
+    if(fase!=='run'||!aguarda)return;
+    setAguarda(false);clearTimeout(stR.current);
+    if(stopR.current)erR.current++;else acR.current++;
+    cntR.current++;setAc(acR.current);setEr(erR.current);setShowStop(false);proximo();
+  };
+  useEffect(()=>()=>{clearTimeout(nxR.current);clearTimeout(stR.current)},[]);
+  const base=getBase(data,'stopsignal');
+  if(fase==='intro') return (
+    <div>
+      <button className="bk" onClick={onBack}>voltar</button>
+      <div className="tc">
+        <div className="tt">STOP-SIGNAL - nivel {nivel}</div>
+        <div className="ts">Inibicao de resposta</div>
+        <div className="tinst">Toque quando aparecer o botao.<br/><br/>Quando aparecer <span style={{color:'var(--re)',fontWeight:700}}>STOP</span>, nao toque.</div>
+        {base&&<div style={{fontFamily:'JetBrains Mono',fontSize:11,color:'var(--mu)',textAlign:'center',marginTop:8}}>media erros recente: {base}</div>}
+        <button className="pb" style={{marginTop:20}} onClick={start}>Iniciar</button>
+      </div>
+    </div>
+  );
+  if(fase==='result') return (
+    <div>
+      <button className="bk" onClick={onBack}>voltar</button>
+      <div className="st">RESULTADO - STOP-SIGNAL</div>
+      <div className="res">
+        <div className="rr"><span>Acertos</span><span style={{color:'var(--gr)'}}>{ac}</span></div>
+        <div className="rr"><span>Erros</span><span style={{color:er>0?'var(--re)':'var(--tx)'}}>{er}</span></div>
+        {base&&<div className="rr"><span>Media recente</span><span>{base}</span></div>}
+        <div className="rf">{fbTxt(er,base)}</div>
+      </div>
+      <div style={{textAlign:'center',fontFamily:'JetBrains Mono',fontSize:14,color:'var(--gr)',padding:'16px 0'}}>Feito = sucesso.</div>
+    </div>
+  );
+  return (
+    <div>
+      <div style={{display:'flex',justifyContent:'space-between',fontFamily:'JetBrains Mono',fontSize:11,color:'var(--mu)',marginBottom:8}}>
+        <span>{cntR.current}/{TOTAL}</span><span>erros: {erR.current}</span>
+      </div>
+      {showStop?<div className="stop">STOP</div>:aguarda?<button className="ssb" onClick={click}>TOQUE</button>:<div style={{width:140,height:140,margin:'24px auto',display:'flex',alignItems:'center',justifyContent:'center'}}><span style={{fontFamily:'JetBrains Mono',fontSize:11,color:'var(--mu)'}}>aguarde...</span></div>}
+      <div style={{textAlign:'center',fontSize:12,color:'var(--mu)',fontFamily:'JetBrains Mono'}}>{showStop?'nao toque!':'toque quando aparecer'}</div>
+    </div>
+  );
+}
+
+function Inicao({data,setData,onBack}) {
+  const [ex,setEx]=useState(null);
+  if(ex==='gng') return <GoNoGo data={data} setData={setData} onBack={()=>setEx(null)} nivel={getNivel(data,'gonogo')}/>;
+  if(ex==='str') return <Stroop data={data} setData={setData} onBack={()=>setEx(null)} nivel={getNivel(data,'stroop')}/>;
+  if(ex==='stp') return <StopSignal data={data} setData={setData} onBack={()=>setEx(null)} nivel={getNivel(data,'stopsignal')}/>;
+  return (
+    <div>
+      <button className="bk" onClick={onBack}>voltar</button>
+      <div className="st">INICAO COGNITIVA</div>
+      <div style={{fontSize:12,color:'var(--mu)',marginBottom:20}}>Escolha um exercicio para hoje.</div>
+      <div className="im">
+        {[{id:'gng',t:'Go / No-Go',s:'Resposta visual inibicao',k:'gonogo'},{id:'str',t:'Stroop',s:'Interferencia cor / palavra',k:'stroop'},{id:'stp',t:'Stop-signal',s:'Inibicao de resposta',k:'stopsignal'}].map(e=>(
+          <div key={e.id} className="ic" onClick={()=>setEx(e.id)}>
+            <div className="ict">{e.t}</div>
+            <div style={{display:'flex',justifyContent:'space-between'}}>
+              <span style={{fontSize:11,color:'var(--mu)'}}>{e.s}</span>
+              <span style={{fontFamily:'JetBrains Mono',fontSize:10,color:'var(--ac)'}}>nivel {getNivel(data,e.k)}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Regulacao({data,setData,onBack}) {
+  const key=today();
+  const done=data['treino_'+key];
+  const dc=Object.keys(data).filter(k=>k.startsWith('treino_')).length;
+  const digs=5+Math.floor(dc/5);
+  const [bloco,setBloco]=useState(0);
+  const [fase,setFase]=useState('show');
+  const [seq,setSeq]=useState(()=>genSeq(digs));
+  const [inp,setInp]=useState('');
+  const [fb,setFb]=useState(null);
+  const [tsec,setTsec]=useState(180);
+  const [trun,setTrun]=useState(false);
+  const [tcfg,setTcfg]=useState(3);
+  const tref=useRef(null);
+  const ci=ctrlInst(dc);
+  useEffect(()=>{
+    if(trun&&bloco===1){tref.current=setInterval(()=>setTsec(s=>{if(s<=1){clearInterval(tref.current);setTrun(false);return 0}return s-1}),1000)}
+    return()=>clearInterval(tref.current);
+  },[trun,bloco]);
+  const startT=m=>{setTsec(m*60);setTcfg(m);setTrun(true)};
+  const memNext=()=>{
+    if(fase==='show'){setFase('inp');setInp('');return}
+    const ok=inp.trim()===seq;setFb(ok?'ok':'err');
+    setTimeout(()=>{setFb(null);setSeq(genSeq(digs));setFase('show');setInp('')},1200);
+  };
+  const finish=()=>{const nd={...data,['treino_'+key]:{date:key}};setData(nd);save(nd);setBloco(4)};
+  if(done) return (
+    <div>
+      <button className="bk" onClick={onBack}>voltar</button>
+      <div style={{background:'var(--sf)',border:'1px solid var(--gr)',borderRadius:8,padding:20,textAlign:'center'}}>
+        <div style={{color:'var(--gr)',fontFamily:'JetBrains Mono',fontSize:12,marginBottom:8}}>REGULACAO CONCLUIDA HOJE</div>
+        <div style={{color:'var(--mu)',fontSize:13}}>{dc} dias - {digs} digitos</div>
+      </div>
+    </div>
+  );
+  if(bloco===4) return (
+    <div>
+      <div className="tdone"><div className="tdtitle">Feito = sucesso.</div><div style={{color:'var(--mu)',fontSize:13,marginTop:8}}>Treino #{dc} concluido.</div></div>
+      <button className="sb" onClick={onBack}>voltar</button>
+    </div>
+  );
+  return (
+    <div>
+      <button className="bk" onClick={onBack}>voltar</button>
+      <div className="bn">{['MEM','FOCO','CTRL','LEIT'].map((l,i)=>(<div key={i} style={{display:'flex',alignItems:'center',gap:4}}><div className={'bd2 '+(i===bloco?'on':i<bloco?'dn':'')}/><span style={{fontSize:9,fontFamily:'JetBrains Mono',color:i===bloco?'var(--ac)':i<bloco?'var(--gr)':'var(--bd)'}}>{l}</span></div>))}</div>
+      {bloco===0&&(
+        <div className="tc">
+          <div className="tt">BLOCO 1 - MEMORIA</div>
+          <div className="ts">Memorize e depois digite a sequencia.</div>
+          <div className="pr"><span>Digitos: {digs}</span><span>{dc} dias</span></div>
+          {fase==='show'&&<><div className="tseq">{seq}</div><button className="pb" onClick={memNext}>Memoriei - Digitar</button></>}
+          {fase==='inp'&&<>
+            <div style={{textAlign:'center',color:'var(--mu)',fontSize:12,padding:'16px 0',fontFamily:'JetBrains Mono'}}>Digite a sequencia:</div>
+            <input className="ti" type="text" inputMode="numeric" placeholder="00000" value={inp} onChange={e=>setInp(e.target.value)} onKeyDown={e=>e.key==='Enter'&&memNext()} autoFocus/>
+            {fb==='ok'&&<div className="fok">CORRETO</div>}
+            {fb==='err'&&<div className="fer">ERRADO - ok, continue</div>}
+            {!fb&&<button className="pb" onClick={memNext}>Confirmar</button>}
+            <button className="sb" onClick={()=>{setSeq(genSeq(digs));setFase('show');setInp('')}}>Nova sequencia</button>
+          </>}
+          <button className="sb" style={{marginTop:16}} onClick={()=>setBloco(1)}>Ir para Foco</button>
+        </div>
+      )}
+      {bloco===1&&(
+        <div className="tc">
+          <div className="tt">BLOCO 2 - FOCO</div>
+          <div className="ts">Atencao sustentada.</div>
+          {!trun&&tsec===tcfg*60?<>
+            <div className="tinst">Foque na sua respiracao.<br/>Inspire 4s. Expire 6s.</div>
+            <div style={{display:'flex',gap:8,marginBottom:16}}>{[3,5].map(m=><button key={m} className="sb" style={{margin:0}} onClick={()=>startT(m)}>{m} min</button>)}</div>
+          </>:<>
+            <div className="ttim">{String(Math.floor(tsec/60)).padStart(2,'0')}:{String(tsec%60).padStart(2,'0')}</div>
+            <div className="tbar"><div className="tbf" style={{width:(tsec/(tcfg*60)*100)+'%'}}/></div>
+            {tsec===0&&<div className="ok" style={{marginBottom:12}}>Tempo concluido</div>}
+          </>}
+          <button className="sb" onClick={()=>setBloco(2)}>{tsec===0?'Ir para Controle':'Pular'}</button>
+        </div>
+      )}
+      {bloco===2&&(
+        <div className="tc">
+          <div className="tt">BLOCO 3 - CONTROLE MENTAL</div>
+          <div className="ts">Execute mentalmente.</div>
+          <div className="tinst">{ci.i}</div>
+          <div style={{fontFamily:'JetBrains Mono',fontSize:11,color:'var(--mu)',textAlign:'center',marginBottom:20}}>ex: {ci.e}</div>
+          <button className="pb" onClick={()=>setBloco(3)}>Conclui - Leitura</button>
+        </div>
+      )}
+      {bloco===3&&(
+        <div className="tc">
+          <div className="tt">BLOCO 4 - LEITURA</div>
+          <div className="ts">Foco sustentado.</div>
+          <div className="tinst">Leia 1 pagina.<br/><br/>Depois resuma mentalmente em 3 frases.</div>
+          <button className="pb" style={{marginTop:20}} onClick={finish}>Finalizar Treino</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Treino({data,setData}) {
+  const [modo,setModo]=useState(null);
+  if(modo==='reg') return <Regulacao data={data} setData={setData} onBack={()=>setModo(null)}/>;
+  if(modo==='ini') return <Inicao data={data} setData={setData} onBack={()=>setModo(null)}/>;
+  const key=today();
+  const rd=!!data['treino_'+key];
+  const id=!!(data['inic_gonogo_'+key]||data['inic_stroop_'+key]||data['inic_stopsignal_'+key]);
+  return (
+    <div>
+      <div className="st">TREINO COGNITIVO</div>
+      <div className="tmenu">
+        <button className="tmb" onClick={()=>setModo('reg')}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+            <div><div className="tmt" style={{color:rd?'var(--gr)':'var(--tx)'}}>Regulacao</div><div className="tms">Memoria - Foco - Controle - Leitura</div></div>
+            {rd&&<span style={{color:'var(--gr)',fontSize:16}}>v</span>}
+          </div>
+        </button>
+        <button className="tmb" onClick={()=>setModo('ini')}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+            <div><div className="tmt" style={{color:id?'var(--gr)':'var(--tx)'}}>Inicao Cognitiva</div><div className="tms">Go/No-Go - Stroop - Stop-signal</div></div>
+            {id&&<span style={{color:'var(--gr)',fontSize:16}}>v</span>}
+          </div>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function Check({data,setData}) {
+  const key=today();
+  const ex=data[key];
+  const [editing,setEditing]=useState(false);
+  const [e,setE]=useState(ex||defEntry());
+  const [saved,setSaved]=useState(false);
+  const upd=(f,v)=>setE(prev=>({...prev,[f]:v}));
+  const doSave=()=>{const nd={...data,[key]:{...e,date:key}};setData(nd);save(nd);setSaved(true);setEditing(false);setTimeout(()=>setSaved(false),3000)};
+  if(ex&&!editing) return (
+    <div>
+      <Rules/>
+      <div className="ad"><div className="at">DIA REGISTRADO</div><div className="as">{fmtDate(key)}</div><button className="el" onClick={()=>{setE(ex);setEditing(true)}}>editar</button></div>
+    </div>
+  );
+  const execs=[{k:'execCorpo',l:'Corpo'},{k:'execMente',l:'Mente'},{k:'execEsp',l:'Espirit.'},{k:'execRotina',l:'Rotina'}];
+  return (
+    <div>
+      <Rules/>
+      <div className="dh">{fmtDate(key).toUpperCase()}</div>
+      <div className="st">CHECK DO DIA</div>
+      <div className="fi">
+        <div className={'cr '+(e.semSubstancia?'ck':'')} onClick={()=>upd('semSubstancia',!e.semSubstancia)}>
+          <div className="cb">{e.semSubstancia&&<span className="cm">v</span>}</div>
+          <span style={{fontSize:13}}>Sem substancia hoje</span>
+        </div>
+      </div>
+      {[{k:'sono',l:'Sono'},{k:'energia',l:'Energia'},{k:'fissura',l:'Fissura'}].map(f=>(
+        <div className="fi" key={f.k}>
+          <label className="fl">{f.l} <span>0-10</span></label>
+          <div className="sw"><input type="range" className="sl" min="0" max="10" value={e[f.k]} onChange={ev=>upd(f.k,Number(ev.target.value))}/><span className="sv">{e[f.k]}</span></div>
+        </div>
+      ))}
+      <div className="fi">
+        <label className="fl">Execucao</label>
+        <div className="ec">{execs.map(x=>(<div key={x.k} className={'ep '+(e[x.k]?'ck':'')} onClick={()=>upd(x.k,!e[x.k])}>{x.l}</div>))}</div>
+      </div>
+      {[{k:'socialLeve',l:'Social leve'},{k:'excessoIntensidade',l:'Excesso intensidade'}].map(f=>(
+        <div className="fi" key={f.k}>
+          <label className="fl">{f.l}</label>
+          <div className="yr">
+            <button className={'yb '+(e[f.k]===true?'sy':'')} onClick={()=>upd(f.k,e[f.k]===true?null:true)}>SIM</button>
+            <button className={'yb '+(e[f.k]===false?'sn':'')} onClick={()=>upd(f.k,e[f.k]===false?null:false)}>NAO</button>
+          </div>
+        </div>
+      ))}
+      <div className="fi">
+        <label className="fl">Observacao</label>
+        <textarea className="oi" rows={3} placeholder="o que aconteceu hoje?" value={e.observacao} onChange={ev=>upd('observacao',ev.target.value)}/>
+      </div>
+      <button className="pb" onClick={doSave}>Salvar dia</button>
+      {saved&&<div className="ok">REGISTRADO</div>}
+    </div>
+  );
+}
+
+function Home({data,setData,setTab}) {
+  const key=today();
+  const cd=!!data[key];
+  const rd=!!data['treino_'+key];
+  const id=!!(data['inic_gonogo_'+key]||data['inic_stroop_'+key]||data['inic_stopsignal_'+key]);
+  const dc=Object.keys(data).filter(k=>k.startsWith('treino_')).length;
+  const digs=5+Math.floor(dc/5);
+  const tc=Object.values(data).filter(e=>e&&e.date&&e.date.length===10).length;
+  const expChecks=()=>{
+    const rows=Object.values(data).filter(e=>e&&e.date&&e.date.length===10).sort((a,b)=>a.date.localeCompare(b.date));
+    if(!rows.length){alert('Nenhum check ainda.');return}
+    const h=['data','sem_substancia','sono','energia','fissura','exec_corpo','exec_mente','exec_esp','exec_rotina','social_leve','excesso','observacao'];
+    const d=rows.map(e=>[e.date,e.semSubstancia?'sim':'nao',e.sono,e.energia,e.fissura,e.execCorpo?'sim':'nao',e.execMente?'sim':'nao',e.execEsp?'sim':'nao',e.execRotina?'sim':'nao',e.socialLeve===true?'sim':e.socialLeve===false?'nao':'',e.excessoIntensidade===true?'sim':e.excessoIntensidade===false?'nao':'',e.observacao||'']);
+    dlCSV('checks_'+today()+'.csv',[h,...d]);
+  };
+  const expTreinos=()=>{
+    const rows=Object.entries(data).filter(([k])=>k.startsWith('treino_')).map(([,v])=>v).sort((a,b)=>a.date.localeCompare(b.date));
+    if(!rows.length){alert('Nenhum treino ainda.');return}
+    dlCSV('treinos_'+today()+'.csv',[['data','dia','digitos'],...rows.map((t,i)=>[t.date,i+1,5+Math.floor(i/5)])]);
+  };
+  const item=(label,sub,done,onClick)=>(
+    <div style={{background:'var(--sf)',border:'1px solid '+(done?'var(--gr)':'var(--bd)'),borderRadius:8,padding:16,display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+      <div>
+        <div style={{fontSize:13,color:done?'var(--gr)':'var(--tx)',marginBottom:2}}>{label}</div>
+        <div style={{fontSize:11,color:'var(--mu)',fontFamily:'JetBrains Mono'}}>{sub}</div>
+      </div>
+      {done?<span style={{color:'var(--gr)',fontSize:16}}>v</span>:<button className="sb" style={{width:'auto',padding:'8px 14px',margin:0}} onClick={onClick}>Iniciar</button>}
+    </div>
+  );
+  return (
+    <div>
+      <Rules/>
+      <div className="st">HOJE</div>
+      <div style={{display:'flex',flexDirection:'column',gap:10,marginBottom:24}}>
+        {item('Regulacao',rd?'concluido dia #'+dc:'~10min - '+digs+' digitos',rd,()=>setTab('treino'))}
+        {item('Inicao Cognitiva',id?'concluido':'~2 min',id,()=>setTab('treino'))}
+        {item('Check Diario',cd?'registrado':'menos de 1 min',cd,()=>setTab('check'))}
+      </div>
+      <div style={{fontSize:11,fontFamily:'JetBrains Mono',color:'var(--mu)',textAlign:'center',marginBottom:24}}>
+        {rd&&id&&cd?'Tudo feito hoje.':'Itens pendentes acima.'}
+      </div>
+      <div className="xb">
+        <div className="xt">EXPORTAR DADOS</div>
+        <div className="xr">
+          <button className="xe" onClick={expChecks}>checks.csv<span>{tc} registros</span></button>
+          <button className="xe" onClick={expTreinos}>treinos.csv<span>{dc} treinos</span></button>
+        </div>
+        <div className="xi">CSV compativel com Excel e agentes de IA.</div>
+      </div>
+    </div>
+  );
+}
+
+function Cal({data}) {
+  const [vd,setVd]=useState(new Date());
+  const yr=vd.getFullYear(), mo=vd.getMonth();
+  const fd=new Date(yr,mo,1).getDay(), dim=new Date(yr,mo+1,0).getDate();
+  const ts=today(), off=fd===0?6:fd-1;
+  const cells=[];
+  for(let i=0;i<off;i++)cells.push(null);
+  for(let d=1;d<=dim;d++){const k=yr+'-'+String(mo+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');cells.push({d,k})}
+  const mn=vd.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  const pfx=yr+'-'+String(mo+1).padStart(2,'0');
+  const fi=Object.keys(data).filter(k=>!k.startsWith('treino_')&&!k.startsWith('resumo_')&&!k.startsWith('inic_')&&k.startsWith(pfx)).length;
+  const tr=Object.keys(data).filter(k=>k.startsWith('treino_'+pfx)).length;
+  return (
+    <div>
+      <div className="ch">
+        <button className="cn" onClick={()=>setVd(d=>new Date(d.getFullYear(),d.getMonth()-1,1))}>&#8249;</button>
+        <div style={{textAlign:'center'}}>
+          <div className="cm2">{mn.toUpperCase()}</div>
+          <div style={{fontSize:10,color:'var(--mu)',fontFamily:'JetBrains Mono',marginTop:2}}>check {fi}/{dim} - regulacao {tr}/{dim}</div>
+        </div>
+        <button className="cn" onClick={()=>setVd(d=>new Date(d.getFullYear(),d.getMonth()+1,1))}>&#8250;</button>
+      </div>
+      <div className="cg">
+        {['SEG','TER','QUA','QUI','SEX','SAB','DOM'].map(d=><div key={d} className="cdn">{d}</div>)}
+        {cells.map((c,i)=>{
+          if(!c)return<div key={'e'+i} className="cd es"/>;
+          const ft=!!data[c.k], tt=!!data['treino_'+c.k], it=c.k===ts;
+          return<div key={c.k} className={'cd'+(ft?' fi2':'')+(tt&&!ft?' tr':'')+(it?' to':'')}>{c.d}</div>
+        })}
+      </div>
+      <div style={{display:'flex',gap:16,marginTop:16,fontSize:11,color:'var(--mu)',fontFamily:'JetBrains Mono'}}>
+        <span><span style={{color:'var(--gr)'}}>■</span> check</span>
+        <span><span style={{color:'var(--ac)'}}>■</span> regulacao</span>
+      </div>
+    </div>
+  );
+}
+
+function Semana({data,aiAn,setAiAn}) {
+  const [loading,setLoading]=useState(false);
+  const wd=weekDays(), we=wd.map(d=>data[d]).filter(Boolean), wt=wd.filter(d=>data['treino_'+d]).length;
+  const as=avg(we.map(e=>e.sono)), ae=avg(we.map(e=>e.energia)), af=avg(we.map(e=>e.fissura));
+  const et=we.reduce((a,e)=>a+[e.execCorpo,e.execMente,e.execEsp,e.execRotina].filter(Boolean).length,0);
+  const ep=we.length>0?Math.round((et/(we.length*4))*100):0;
+  const cp=Math.round((we.length/7)*100);
+  let st='green';
+  if(cp<60||(af&&Number(af)>6))st='red';
+  else if(cp<80||(ae&&Number(ae)<5))st='yellow';
+  const sl={green:'CONSISTENCIA BOA',yellow:'ATENCAO',red:'RISCO'};
+  const gerar=async()=>{
+    if(!we.length)return;
+    setLoading(true);
+    const linhas=we.map(e=>{
+      const ex=[e.execCorpo&&'corpo',e.execMente&&'mente',e.execEsp&&'esp',e.execRotina&&'rotina'].filter(Boolean).join(',');
+      return e.date+' sono:'+e.sono+' energia:'+e.energia+' fissura:'+e.fissura+' exec:'+ex+' sub:'+(e.semSubstancia?'nao':'SIM')+' obs:'+(e.observacao||'-');
+    }).join(' | ');
+    const msg='Analise clinica direta em max 5 linhas. Sem elogios. Dados da semana: '+linhas+' Treinos:'+wt+'/7 MediaSono:'+as+' MediaEnergia:'+ae+' MediaFissura:'+af+' Exec:'+ep+'% Consist:'+cp+'%';
+    try {
+      const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:msg}]})});
+      const d=await res.json();
+      setAiAn(d.content?.find(c=>c.type==='text')?.text||'Sem resposta.');
+    } catch(err) {setAiAn('Erro ao conectar.')}
+    setLoading(false);
+  };
+  return (
+    <div>
+      <div className="st">SEMANA ATUAL</div>
+      <div className={'badge '+st}><span>●</span><span>{sl[st]}</span><span style={{marginLeft:4,opacity:.6}}>{we.length}/7 - treino {wt}/7</span></div>
+      <div className="sg">
+        <div className="sc"><div className="sl2">SONO MEDIO</div><div className={'sv2 '+(as>=7?'good':as>=5?'warn':'bad')}>{as||'—'}</div></div>
+        <div className="sc"><div className="sl2">ENERGIA MEDIA</div><div className={'sv2 '+(ae>=7?'good':ae>=5?'warn':'bad')}>{ae||'—'}</div></div>
+        <div className="sc"><div className="sl2">FISSURA MEDIA</div><div className={'sv2 '+(af<=3?'good':af<=6?'warn':'bad')}>{af||'—'}</div></div>
+        <div className="sc"><div className="sl2">EXECUCAO</div><div className={'sv2 '+(ep>=70?'good':ep>=40?'warn':'bad')}>{ep}%</div></div>
+      </div>
+      <div className="st" style={{marginTop:16}}>ANALISE IA</div>
+      {aiAn&&<div className="aib"><div className="ail">PARECER DA SEMANA</div><div className="ait">{aiAn}</div></div>}
+      <button className="sb" onClick={gerar} disabled={loading||!we.length}>{loading?'Analisando...':we.length?'Gerar analise da semana':'Sem dados'}</button>
+    </div>
+  );
+}
+
+function Mensal({data,setData}) {
+  const now=new Date();
+  const pfx=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  const me=Object.values(data).filter(e=>e&&e.date?.startsWith(pfx));
+  const dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+  const tr=Object.keys(data).filter(k=>k.startsWith('treino_'+pfx)).length;
+  const ae=avg(me.map(e=>e.energia));
+  const ef=(()=>{
+    if(me.length<2)return null;
+    const s=[...me].sort((a,b)=>a.date.localeCompare(b.date));
+    const h=Math.ceil(s.length/2);
+    const d=(Number(avg(s.slice(h).map(e=>e.fissura)))-Number(avg(s.slice(0,h).map(e=>e.fissura)))).toFixed(1);
+    return d>0?'+'+d+' subindo':d+' caindo';
+  })();
+  const rk='resumo_'+pfx;
+  const [res,setRes]=useState(data[rk]||'');
+  const save2=()=>{const nd={...data,[rk]:res};setData(nd);save(nd)};
+  return (
+    <div>
+      <div className="st">{now.toLocaleDateString('pt-BR',{month:'long',year:'numeric'}).toUpperCase()}</div>
+      <div style={{background:'var(--sf)',border:'1px solid var(--bd)',borderRadius:8,padding:'4px 16px',marginBottom:20}}>
+        <div className="ms"><span className="ml">Checks feitos</span><span className="mv">{me.length}/{dim}</span></div>
+        <div className="ms"><span className="ml">Regulacao feita</span><span className="mv">{tr}/{dim}</span></div>
+        <div className="ms"><span className="ml">Energia media</span><span className="mv">{ae||'—'}</span></div>
+        <div className="ms"><span className="ml">Fissura</span><span className="mv" style={{color:ef?.includes('subindo')?'var(--re)':'var(--gr)'}}>{ef||'—'}</span></div>
+      </div>
+      <div className="st">REFLEXAO DO MES</div>
+      <textarea className="oi" rows={6} placeholder="Como foi este mes? O que funcionou?" value={res} onChange={e=>setRes(e.target.value)}/>
+      <button className="pb" style={{marginTop:12}} onClick={save2}>Salvar reflexao</button>
+    </div>
+  );
+}
+
+function App() {
+  const [tab,setTab]=useState('home');
+  const [data,setData]=useState(load);
+  const [aiAn,setAiAn]=useState('');
+  const tabs=[{id:'home',l:'HOME'},{id:'treino',l:'TREINO'},{id:'check',l:'CHECK'},{id:'cal',l:'MES'},{id:'semana',l:'SEMANA'},{id:'bal',l:'BALANCO'}];
+  return (
+    <div className="app">
+      <nav className="nav">{tabs.map(t=><button key={t.id} className={'nb '+(tab===t.id?'on':'')} onClick={()=>setTab(t.id)}>{t.l}</button>)}</nav>
+      <main className="main">
+        {tab==='home'   &&<Home data={data} setData={setData} setTab={setTab}/>}
+        {tab==='treino' &&<Treino data={data} setData={setData}/>}
+        {tab==='check'  &&<Check data={data} setData={setData}/>}
+        {tab==='cal'    &&<Cal data={data}/>}
+        {tab==='semana' &&<Semana data={data} aiAn={aiAn} setAiAn={setAiAn}/>}
+        {tab==='bal'    &&<Mensal data={data} setData={setData}/>}
+      </main>
+    </div>
+  );
+}
+ReactDOM.render(<App/>, document.getElementById('root'));
+</script>
+</body>
+</html>
