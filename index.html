@@ -333,44 +333,94 @@ function Stroop({data,setData,onBack,nivel}) {
 }
 
 function StopSignal({data,setData,onBack,nivel}) {
-  const TOTAL=40;
-  const SF=nivel===1?0.2:nivel===2?0.3:0.4;
-  const SD=nivel===1?700:nivel===2?500:350;
-  const [fase,setFase]=useState('intro');
-  const [ac,setAc]=useState(0);
-  const [er,setEr]=useState(0);
-  const [showStop,setShowStop]=useState(false);
-  const [aguarda,setAguarda]=useState(false);
-  const acR=useRef(0),erR=useRef(0),cntR=useRef(0),stopR=useRef(false),stR=useRef(null),nxR=useRef(null);
-  const proximo=()=>{
-    clearTimeout(nxR.current);
-    nxR.current=setTimeout(()=>{
-      if(cntR.current>=TOTAL){setAc(acR.current);setEr(erR.current);const k='inic_stopsignal_'+today();const nd={...data,[k]:{date:today(),tipo:'stopsignal',acertos:acR.current,erros:erR.current,nivel}};setData(nd);save(nd);setFase('result');return}
-      stopR.current=false;setShowStop(false);setAguarda(true);
-      if(Math.random()<SF){stR.current=setTimeout(()=>{setShowStop(true);stopR.current=true;setAguarda(false);stR.current=setTimeout(()=>{if(stopR.current){acR.current++;cntR.current++;setAc(acR.current);}setShowStop(false);stopR.current=false;proximo();},900)},SD)}
-    },700);
+  const TOTAL = 40;
+  const SF = nivel===1 ? 0.3 : nivel===2 ? 0.4 : 0.5;
+  const STOP_DURATION = 1200;
+  const BETWEEN_MS = 800;
+
+  const [fase,setFase] = useState('intro');
+  const [ac,setAc] = useState(0);
+  const [er,setEr] = useState(0);
+  const [showStop,setShowStop] = useState(false);
+  const [showGo,setShowGo] = useState(false);
+
+  const acR=useRef(0), erR=useRef(0), cntR=useRef(0);
+  const isStop=useRef(false), clicked=useRef(false);
+  const t1=useRef(null), t2=useRef(null), t3=useRef(null);
+
+  const clearAll = () => { clearTimeout(t1.current); clearTimeout(t2.current); clearTimeout(t3.current); };
+
+  const proximo = () => {
+    clearAll();
+    if(cntR.current >= TOTAL) {
+      setAc(acR.current); setEr(erR.current);
+      const k = 'inic_stopsignal_' + today();
+      const nd = {...data, [k]: {date:today(), tipo:'stopsignal', acertos:acR.current, erros:erR.current, nivel}};
+      setData(nd); save(nd); setFase('result');
+      return;
+    }
+    setShowGo(false); setShowStop(false);
+    isStop.current = Math.random() < SF;
+    clicked.current = false;
+
+    t1.current = setTimeout(() => {
+      if(isStop.current) {
+        setShowStop(true);
+        t2.current = setTimeout(() => {
+          setShowStop(false);
+          if(!clicked.current) { acR.current++; }
+          cntR.current++;
+          setAc(acR.current);
+          t3.current = setTimeout(proximo, BETWEEN_MS);
+        }, STOP_DURATION);
+      } else {
+        setShowGo(true);
+        t2.current = setTimeout(() => {
+          setShowGo(false);
+          if(!clicked.current) { erR.current++; }
+          cntR.current++;
+          setEr(erR.current);
+          t3.current = setTimeout(proximo, BETWEEN_MS);
+        }, 1000);
+      }
+    }, BETWEEN_MS);
   };
-  const start=()=>{acR.current=0;erR.current=0;cntR.current=0;setFase('run');proximo()};
-  const click=()=>{
-    if(fase!=='run'||!aguarda)return;
-    setAguarda(false);clearTimeout(stR.current);
-    if(stopR.current)erR.current++;else acR.current++;
-    cntR.current++;setAc(acR.current);setEr(erR.current);setShowStop(false);proximo();
+
+  const start = () => { acR.current=0; erR.current=0; cntR.current=0; setAc(0); setEr(0); setFase('run'); proximo(); };
+
+  const handleClick = () => {
+    if(fase !== 'run' || clicked.current) return;
+    clicked.current = true;
+    if(isStop.current) {
+      erR.current++; setEr(erR.current);
+      clearAll();
+      setShowStop(false);
+      cntR.current++;
+      setTimeout(proximo, BETWEEN_MS);
+    } else {
+      acR.current++; setAc(acR.current);
+    }
   };
-  useEffect(()=>()=>{clearTimeout(nxR.current);clearTimeout(stR.current)},[]);
-  const base=getBase(data,'stopsignal');
+
+  useEffect(() => () => clearAll(), []);
+  const base = getBase(data,'stopsignal');
+
   if(fase==='intro') return (
     <div>
       <button className="bk" onClick={onBack}>voltar</button>
       <div className="tc">
         <div className="tt">STOP-SIGNAL - nivel {nivel}</div>
         <div className="ts">Inibicao de resposta</div>
-        <div className="tinst">Toque quando aparecer o botao.<br/><br/>Quando aparecer <span style={{color:'var(--re)',fontWeight:700}}>STOP</span>, nao toque.</div>
+        <div className="tinst">
+          Toque no botao TOQUE quando aparecer.<br/><br/>
+          Quando aparecer <span style={{color:'var(--re)',fontWeight:700}}>STOP</span>, nao toque — segure a resposta.
+        </div>
         {base&&<div style={{fontFamily:'JetBrains Mono',fontSize:11,color:'var(--mu)',textAlign:'center',marginTop:8}}>media erros recente: {base}</div>}
         <button className="pb" style={{marginTop:20}} onClick={start}>Iniciar</button>
       </div>
     </div>
   );
+
   if(fase==='result') return (
     <div>
       <button className="bk" onClick={onBack}>voltar</button>
@@ -384,13 +434,23 @@ function StopSignal({data,setData,onBack,nivel}) {
       <div style={{textAlign:'center',fontFamily:'JetBrains Mono',fontSize:14,color:'var(--gr)',padding:'16px 0'}}>Feito = sucesso.</div>
     </div>
   );
+
   return (
     <div>
       <div style={{display:'flex',justifyContent:'space-between',fontFamily:'JetBrains Mono',fontSize:11,color:'var(--mu)',marginBottom:8}}>
         <span>{cntR.current}/{TOTAL}</span><span>erros: {erR.current}</span>
       </div>
-      {showStop?<div className="stop" style={{cursor:"pointer"}} onClick={()=>{if(stopR.current){erR.current++;cntR.current++;setEr(erR.current);stopR.current=false;clearTimeout(stR.current);setShowStop(false);proximo();}}}>STOP</div>:aguarda?<button className="ssb" onClick={click}>TOQUE</button>:<div style={{width:140,height:140,margin:'24px auto',display:'flex',alignItems:'center',justifyContent:'center'}}><span style={{fontFamily:'JetBrains Mono',fontSize:11,color:'var(--mu)'}}>aguarde...</span></div>}
-      <div style={{textAlign:'center',fontSize:12,color:'var(--mu)',fontFamily:'JetBrains Mono'}}>{showStop?'nao toque!':'toque quando aparecer'}</div>
+      {showStop
+        ? <div className="stop" onClick={handleClick} style={{cursor:'pointer'}}>STOP</div>
+        : showGo
+          ? <button className="ssb" onClick={handleClick}>TOQUE</button>
+          : <div style={{width:140,height:140,margin:'24px auto',display:'flex',alignItems:'center',justifyContent:'center'}}>
+              <span style={{fontFamily:'JetBrains Mono',fontSize:11,color:'var(--mu)'}}>+</span>
+            </div>
+      }
+      <div style={{textAlign:'center',fontSize:12,color:'var(--mu)',fontFamily:'JetBrains Mono'}}>
+        {showStop ? 'nao toque!' : showGo ? 'TOQUE!' : 'aguarde...'}
+      </div>
     </div>
   );
 }
