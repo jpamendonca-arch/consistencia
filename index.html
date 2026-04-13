@@ -492,9 +492,7 @@ function Semanal({data,aiAnalysis,setAiAnalysis}){
   const statusLabels={green:'CONSISTENCIA BOA',yellow:'ATENCAO',red:'RISCO'};
   async function gerarAnalise(){
     if(!weekEntries.length)return;setLoading(true);
-    const resumo=weekEntries.map(e=>{const execs=[e.execCorpo&&'corpo',e.execMente&&'mente',e.execEsp&&'espiritualidade',e.execRotina&&'rotina'].filter(Boolean);return e.date+': sono='+e.sono+' energia='+e.energia+' fissura='+e.fissura+' exec=['+( execs.join(',')||'nenhuma')+'] subst='+(e.semSubstancia?'nao':'SIM')+' obs="'+(e.observacao||'')+'"'}).join('
-');
-    const prompt='Voce e um analista clinico direto. Analise estes dados de habitos e treino cognitivo da semana e gere um parecer objetivo em maximo 5 linhas. Sem elogios. Identifique padroes e riscos.
+    const resumo=weekEntries.map(e=>{const execs=[e.execCorpo&&'corpo',e.execMente&&'mente',e.execEsp&&'espiritualidade',e.execRotina&&'rotina'].filter(Boolean);return e.date+': sono='+e.sono+' energia='+e.energia+' fissura='+e.fissura+' exec=['+( execs.join(',')||'nenhuma')+'] subst='+(e.semSubstancia?'nao':'SIM')+' obs='+(e.observacao||'')}).join('\n');prompt='Voce e um analista clinico direto. Analise estes dados de habitos e treino cognitivo da semana e gere um parecer objetivo em maximo 5 linhas. Sem elogios. Identifique padroes e riscos.
 
 Dados:
 '+resumo+'
